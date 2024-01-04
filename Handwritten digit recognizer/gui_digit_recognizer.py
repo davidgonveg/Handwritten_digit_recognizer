@@ -8,16 +8,27 @@ import numpy as np
 model = load_model('mnist.h5')
 
 def predict_digit(img):
+    data = list(img.getdata())
+
+    inv_data = [(255 - data[x][0], 255 - data[x][1], 255 - data[x][2]) for x in range(len(data))]
+
+    inv_img = Image.new('RGB', img.size)
+
+    inv_img.putdata(inv_data)
+
     #resize image to 28x28 pixels
-    img = img.resize((28,28))
+    inv_img = inv_img.resize((28,28))
+
     #convert rgb to grayscale
-    img = img.convert('L')
-    img = np.array(img)
+    inv_img = inv_img.convert('L')
+    inv_img = np.array(inv_img)
+
     #reshaping to support our model input and normalizing
-    img = img.reshape(1,28,28,1)
-    img = img/255.0
+    inv_img = inv_img.reshape(1,28,28,1)
+    inv_img = inv_img/255.0
+
     #predicting the class
-    res = model.predict([img])[0]
+    res = model.predict([inv_img])[0]
 
     return np.argmax(res), max(res)
 
@@ -28,7 +39,7 @@ class App(tk.Tk):
         self.x = self.y = 0
         
         # Creating elements
-        self.canvas = tk.Canvas(self, width=300, height=300, bg = "black", cursor="cross")
+        self.canvas = tk.Canvas(self, width=300, height=300, bg = "white", cursor="cross")
         self.label = tk.Label(self, text="Draw..", font=("Helvetica", 48))
         self.classify_btn = tk.Button(self, text = "Recognise", command = self.classify_handwriting)   
         self.button_clear = tk.Button(self, text = "Clear", command = self.clear_all)
@@ -59,7 +70,7 @@ class App(tk.Tk):
         self.x = event.x
         self.y = event.y
         r=8
-        self.canvas.create_oval(self.x-r, self.y-r, self.x + r, self.y + r, fill='white')
+        self.canvas.create_oval(self.x-r, self.y-r, self.x + r, self.y + r, fill='black')
        
 app = App()
 mainloop()
