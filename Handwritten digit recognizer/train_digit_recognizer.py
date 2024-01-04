@@ -1,36 +1,14 @@
 import keras
+import tensorflow as tf
+
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
-from keras.optimizers import Adam
-from keras import backend as K
-
-# Funciones base
 
 import matplotlib.pyplot as plt
-import numpy as np
-
-def visualize_learning_curve(H):
-  epochs = len(H.history["loss"])
-  plt.style.use("ggplot")
-  plt.figure()
-  plt.plot(np.arange(0, epochs), H.history["loss"], label="train_loss")
-  plt.plot(np.arange(0, epochs), H.history["val_loss"], label="val_loss")
-  plt.plot(np.arange(0, epochs), H.history["accuracy"], label="train_acc")
-  plt.plot(np.arange(0, epochs), H.history["val_accuracy"], label="val_acc")
-  plt.title("Training Loss and Accuracy")
-  plt.xlabel("Epoch #")
-  plt.ylabel("Loss/Accuracy")
-  plt.legend()
-
-from sklearn.metrics import classification_report
-
-def evaluate_model(model, x, y):
-  print("[INFO]: Evaluando red neuronal...")
-  predictions = model.predict(x, batch_size=128)
-  print(classification_report(y, predictions.argmax(axis=1)))
-
+from keras.optimizers import Adam
+from keras import backend as K
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -55,9 +33,9 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-batch_size = 512
+batch_size = 1024
 num_classes = 10
-epochs = 20
+epochs = 25
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(6, 6),activation='relu',input_shape=input_shape))
@@ -75,21 +53,27 @@ model.add(Dense(num_classes, activation='softmax'))
 
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
-hist = model.fit(x_train, y_train,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test),shuffle=True)
+hist = model.fit(x_train, y_train,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test), shuffle=True)
 print("The model has successfully trained")
 
 score = model.evaluate(x_test, y_test, verbose=1)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-# Evaluación + Testeo
+# Mostrar ejemplos con sus etiquetas
+num_examples_to_show = 5
+predictions = model.predict(x_test[:num_examples_to_show])
+predicted_labels = tf.argmax(predictions, axis=1)
 
-# Learning curves
-visualize_learning_curve(hist)
+plt.figure(figsize=(12, 4))
+for i in range(num_examples_to_show):
+    plt.subplot(1, num_examples_to_show, i + 1)
+    plt.imshow(x_test[i].reshape(28, 28), cmap='gray')
+    plt.title(f'Etiqueta real: {tf.argmax(y_test[i])}\nPredicción: {predicted_labels[i]}')
+    plt.axis('off')
 
-# Evaluando el modelo de predicción con las imágenes de test
-evaluate_model(model, x_test, y_test)
+plt.show()
 
-#model.save('mnist.h5')
+model.save('mnist.h5', overwrite=True)
 print("Saving the model as mnist.h5")
 
