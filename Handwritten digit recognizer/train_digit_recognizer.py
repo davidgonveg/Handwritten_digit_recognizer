@@ -5,6 +5,7 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
+from keras.preprocessing.image import ImageDataGenerator
 
 import matplotlib.pyplot as plt
 from keras.optimizers import Adam
@@ -33,27 +34,46 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
+# Crear un generador de aumento de datos
+datagen = ImageDataGenerator(
+    rotation_range=25,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.1,
+    zoom_range=0.1,
+    horizontal_flip=True,
+    vertical_flip=False,
+    fill_mode='nearest'
+)
+
 batch_size = 1024
 num_classes = 10
-epochs = 25
+epochs = 50
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(6, 6),activation='relu',input_shape=input_shape))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, (4, 4), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.6))
 model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.3))
+model.add(Dropout(0.4))
 model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.3))
 model.add(Dense(num_classes, activation='softmax'))
 
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
-hist = model.fit(x_train, y_train,batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(x_test, y_test), shuffle=True)
+augmented_data_generator = datagen.flow(x_train, y_train, batch_size=batch_size)
+
+hist = model.fit(augmented_data_generator, batch_size=batch_size, epochs=epochs, verbose=1,validation_data=(x_test, y_test), shuffle=True)
 print("The model has successfully trained")
 
 score = model.evaluate(x_test, y_test, verbose=1)

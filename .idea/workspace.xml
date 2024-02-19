@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94eb03d4-d670-4a07-afe4-b984ba38f8b4" name="Changes" comment="" />
+    <list default="true" id="94eb03d4-d670-4a07-afe4-b984ba38f8b4" name="Changes" comment="mkmk" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,13 +25,21 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "full.screen.before.presentation.mode": "false"
+    "TODO_SCOPE": "All Places",
+    "full.screen.before.presentation.mode": "false",
+    "last_opened_file_path": "C:/Users/David/Documents/GitHub/Handwritten_digit_recognizer/Handwritten digit recognizer"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\David\Documents\GitHub\Handwritten_digit_recognizer\Handwritten digit recognizer" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="94eb03d4-d670-4a07-afe4-b984ba38f8b4" name="Changes" comment="" />
+      <changelist id="" name="New changelist" comment="" />
       <created>1704305842003</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />

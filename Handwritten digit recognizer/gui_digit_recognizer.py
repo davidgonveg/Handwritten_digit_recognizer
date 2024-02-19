@@ -4,6 +4,7 @@ import tkinter as tk
 import win32gui
 from PIL import ImageGrab, Image
 import numpy as np
+import cv2
 
 model = load_model('mnist.h5')
 
